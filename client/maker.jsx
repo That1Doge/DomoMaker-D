@@ -48,18 +48,17 @@ const DomoList = (props) => {
             return;
         }
 
-        const response = await fetch('/deleteDomo', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id })
-        });
-
-        if (response.ok) {
-
-        } else {
-            console.log('Failed to delete Domo');
+        try {
+            const response = await fetch('/deleteDomo', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id })
+            });
+        } catch (err) {
+            console.log(err);
+            helper.handleError('Could not delete Domo');
         }
     }
 
