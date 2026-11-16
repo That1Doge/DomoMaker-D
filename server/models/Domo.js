@@ -15,6 +15,12 @@ const DomoSchema = new mongoose.Schema({
         min: 0,
         required: true,
     },
+    level: {
+        type: Number,
+        required: true,
+        default: 1,
+        min: 1,
+    },
     owner: {
         type: mongoose.Schema.ObjectId,
         required: true,
