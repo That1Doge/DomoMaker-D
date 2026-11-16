@@ -42,6 +42,23 @@ const getDomos = async (req,res) => {
     };
 };
 
+const deleteDomo = async (req,res) => {
+    try {
+        const { id } = req.body;
+
+        await Domo.findOneAndDelete({
+            _id: id,
+            owner: req.session.account._id
+        });
+
+        return res.json({
+            message: 'Domo deleted successfully'
+        });
+    } catch (err) {
+        return res.status(500).json({ error: 'Unable to delete Domo' });
+    }
+}
+
 module.exports = {
     makerPage,
     makeDomo,
