@@ -55,6 +55,7 @@ const deleteDomo = async (req,res) => {
             message: 'Domo deleted successfully'
         });
     } catch (err) {
+        console.log(err);
         return res.status(500).json({ error: 'Unable to delete Domo' });
     }
 }
@@ -63,4 +64,5 @@ module.exports = {
     makerPage,
     makeDomo,
     getDomos,
+    deleteDomo,
 }
