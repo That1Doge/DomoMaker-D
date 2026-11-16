@@ -1,6 +1,6 @@
 const helper = require('./helper.js');
 const React = require('react');
-const { useState, useEffect} = React;
+const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
 const handleDomo = (e, onDomoAdded) => {
@@ -11,17 +11,17 @@ const handleDomo = (e, onDomoAdded) => {
     const age = e.target.querySelector('#domoAge').value;
     const level = e.target.querySelector('#domoLevel').value;
 
-    if(!name || !age || !level) {
+    if (!name || !age || !level) {
         helper.handleError('All fields are required');
         return false;
     }
 
-    helper.sendPost(e.target.action, {name,age,level}, onDomoAdded);
+    helper.sendPost(e.target.action, { name, age, level }, onDomoAdded);
     return false;
 }
 
 const DomoForm = (props) => {
-    return(
+    return (
         <form id='domoForm'
             onSubmit={(e) => handleDomo(e, props.triggerReload)}
             name='domoForm'
@@ -34,14 +34,34 @@ const DomoForm = (props) => {
             <label htmlFor="age">Age: </label>
             <input id='domoAge' type="number" min='0' name='age' />
             <label htmlFor="level">Level: </label>
-            <input id='domoLevel' type="number" min='1' name='level'/>
-            <input className='makeDomoSubmit' type="submit" value='Make Domo'/>
+            <input id='domoLevel' type="number" min='1' name='level' />
+            <input className='makeDomoSubmit' type="submit" value='Make Domo' />
         </form>
     );
 };
 
 const DomoList = (props) => {
     const [domos, setDomos] = useState(props.domos);
+
+    const deleteDomo = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this Domo?')) {
+            return;
+        }
+
+        const response = await fetch('/deleteDomo', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+        });
+
+        if (response.ok) {
+
+        } else {
+            console.log('Failed to delete Domo');
+        }
+    }
 
     useEffect(() => {
         const loadDomosFromServer = async () => {
@@ -52,7 +72,7 @@ const DomoList = (props) => {
         loadDomosFromServer();
     }, [props.reloadDomos]);
 
-    if(domos.length === 0) {
+    if (domos.length === 0) {
         return (
             <div className='domoList'>
                 <h3 className='emptyDomo'>No Domos Yet!</h3>
@@ -67,7 +87,7 @@ const DomoList = (props) => {
                 <h3 className='domoName'>Name: {domo.name}</h3>
                 <h3 className='domoAge'>Age: {domo.age}</h3>
                 <h3 className='domoLevel'>Level: {domo.level}</h3>
-                <button onClick={() => deleteDomo(domo._id)}>
+                <button className='deleteDomo' onClick={() => deleteDomo(domo._id)}>
                     Delete Domo
                 </button>
             </div>
@@ -90,7 +110,7 @@ const App = () => {
                 <DomoForm triggerReload={() => setReloadDomos(!reloadDomos)} />
             </div>
             <div id='domos'>
-                <DomoList domos={[]} reloadDomos={reloadDomos}/>
+                <DomoList domos={[]} reloadDomos={reloadDomos} />
             </div>
         </div>
     );
@@ -98,7 +118,7 @@ const App = () => {
 
 const init = () => {
     const root = createRoot(document.getElementById('app'));
-    root.render( <App />);
+    root.render(<App />);
 };
 
 window.onload = init;
