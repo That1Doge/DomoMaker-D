@@ -56,6 +56,11 @@ const DomoList = (props) => {
                 },
                 body: JSON.stringify({ id })
             });
+
+            if(response.ok) {
+                props.triggerReload();
+            }
+
         } catch (err) {
             console.log(err);
             helper.handleError('Could not delete Domo');
@@ -109,7 +114,7 @@ const App = () => {
                 <DomoForm triggerReload={() => setReloadDomos(!reloadDomos)} />
             </div>
             <div id='domos'>
-                <DomoList domos={[]} reloadDomos={reloadDomos} />
+                <DomoList domos={[]} reloadDomos={reloadDomos} triggerReload={() => setReloadDomos(prev => !prev)}/>
             </div>
         </div>
     );
